@@ -20,8 +20,12 @@ jobs:
       - run: flutter pub get
         # 3. Installs your app's dependencies
 
+      # <<< --- THIS IS THE FIX --- <<<
+      - run: flutter create . --platforms web
+        # 4. Creates the missing 'web' folder to enable web support
+
       - run: flutter build web --release --base-href /SerenovaHomes/
-        # 4. Builds the web app.
+        # 5. Builds the web app.
         #    --base-href is CRITICAL. It tells the app to load
         #    files from /SerenovaHomes/ instead of the root.
 
@@ -29,5 +33,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build/web
-        # 5. Deploys the contents of the 'build/web' folder
+        # 6. Deploys the contents of the 'build/web' folder
         #    to your 'gh-pages' branch.
