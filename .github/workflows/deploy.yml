@@ -1,37 +1,31 @@
 name: Deploy to GitHub Pages
 
-# Run this workflow on pushes to the 'main' branch
 on:
   push:
     branches: [ main ]
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest # Use a standard Linux runner
+    runs-on: ubuntu-latest
+    
     steps:
-      - uses: actions/checkout@v3
-        # 1. Checks out your repository's code
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - uses: subosito/flutter-action@v2
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-        # 2. Sets up the Flutter SDK
+          flutter-version: '3.24.0'
 
-      - run: flutter pub get
-        # 3. Installs your app's dependencies
+      - name: Get dependencies
+        run: flutter pub get
 
-      # <<< --- THIS IS THE FIX --- <<<
-      - run: flutter create . --platforms web
-        # 4. Creates the missing 'web' folder to enable web support
+      - name: Build for web
+        run: flutter build web --release --base-href /SerenovaHomes/
 
-      - run: flutter build web --release --base-href /SerenovaHomes/
-        # 5. Builds the web app.
-        #    --base-href is CRITICAL. It tells the app to load
-        #    files from /SerenovaHomes/ instead of the root.
-
-      - uses: peaceiris/actions-gh-pages@v3
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build/web
-        # 6. Deploys the contents of the 'build/web' folder
-        #    to your 'gh-pages' branch.
