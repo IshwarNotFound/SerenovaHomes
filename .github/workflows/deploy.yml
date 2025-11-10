@@ -1,0 +1,33 @@
+name: Deploy to GitHub Pages
+
+# Run this workflow on pushes to the 'main' branch
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest # Use a standard Linux runner
+    steps:
+      - uses: actions/checkout@v3
+        # 1. Checks out your repository's code
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+        # 2. Sets up the Flutter SDK
+
+      - run: flutter pub get
+        # 3. Installs your app's dependencies
+
+      - run: flutter build web --release --base-href /SerenovaHomes/
+        # 4. Builds the web app.
+        #    --base-href is CRITICAL. It tells the app to load
+        #    files from /SerenovaHomes/ instead of the root.
+
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
+        # 5. Deploys the contents of the 'build/web' folder
+        #    to your 'gh-pages' branch.
