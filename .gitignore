@@ -1,0 +1,15 @@
+# Flutter/Dart
+.dart_tool/
+.packages
+.pub-cache/
+build/
+*.iml
+*.ipr
+*.iws
+
+# IDE settings
+.idea/
+.vscode/
+
+# Local config
+lib/secrets.dart
